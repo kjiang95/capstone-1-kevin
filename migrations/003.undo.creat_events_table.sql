@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS giftees_table;
