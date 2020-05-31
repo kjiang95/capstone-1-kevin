@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const { requireAuth } = require('../../middleware/auth');
 
 const usersRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -55,11 +56,13 @@ usersRouter
   });
 
 usersRouter
-  .route('/:user_id/giftees')
+  .route('/giftees')
+  .all(requireAuth)
   .get((req, res, next) => {
+    const user_id = req.user.id;
     UsersService.getGifteesByUserId(
       req.app.get('db'),
-      req.params.user_id
+      user_id
     )
       .then(giftees => {
         res.json(UsersService.serializeGiftee(giftees));

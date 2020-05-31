@@ -3,12 +3,11 @@ const path = require('path');
 const giftsRouter = express.Router();
 const jsonBodyParser = express.json();
 const GiftsService = require('./gifts-service');
+const { requireAuth } = require('../../middleware/auth');
 
 giftsRouter
   .route('/')
-  .get(jsonBodyParser, (req, res, next) => {
-    const { event_id } = req.body;
-  })
+  .all(requireAuth)
   .post(jsonBodyParser, (req, res, next) => {
     const { event_id, idea, notes } = req.body;
     const newGift = {
@@ -32,6 +31,7 @@ giftsRouter
 
 giftsRouter
   .route('/:gift_id')
+  .all(requireAuth)
   .get((req, res, next) => {
     GiftsService.getGiftById(
       req.app.get('db'),

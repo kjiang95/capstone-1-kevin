@@ -3,12 +3,13 @@ const path = require('path');
 const gifteesRouter = express.Router();
 const jsonBodyParser = express.json();
 const GifteesService = require('./giftee-service');
+const { requireAuth } = require('../../middleware/auth');
 
 gifteesRouter
   .route('/')
+  .all(requireAuth)
   .get(jsonBodyParser, (req, res, next) => {
-    const { user_id } = req.body;
-    
+    const user_id = req.user.id;
     return GifteesService.getGiftees(
       req.app.get('db'),
       user_id
@@ -19,12 +20,13 @@ gifteesRouter
       .catch(next);
   })
   .post(jsonBodyParser, (req, res, next) => {
-    const { user_id, full_name, relationship } = req.body;
+    const { full_name, relationship } = req.body;
     const newGiftee = {
-      user_id,
       full_name,
       relationship
     };
+
+    newGiftee.user_id = req.user.id;
 
     return GifteesService.insertGiftee(
       req.app.get('db'),
@@ -42,6 +44,7 @@ gifteesRouter
 
 gifteesRouter
   .route('/:giftee_id')
+  .all(requireAuth)
   .get((req, res, next) => {
     GifteesService.getGifteeById(
       req.app.get('db'),
@@ -65,6 +68,7 @@ gifteesRouter
 
 gifteesRouter
   .route('/:giftee_id/events')
+  .all(requireAuth)
   .get((req, res, next) => {
     GifteesService.getEventsByGifteeId(
       req.app.get('db'),

@@ -3,9 +3,11 @@ const express = require('express');
 const eventRouter = express.Router();
 const jsonBodyParser = express.json();
 const EventsService = require('./events-service');
+const { requireAuth } = require('../../middleware/auth');
 
 eventRouter
   .route('/')
+  .all(requireAuth)
   .post(jsonBodyParser, (req, res, next) => {
     const { giftee_id, event_type, event_date, budget } = req.body;
     const newEvent = {
@@ -30,6 +32,7 @@ eventRouter
 
 eventRouter
   .route('/:event_id')
+  .all(requireAuth)
   .get((req, res, next) => {
     EventsService.getEventById(
       req.app.get('db'),
@@ -53,6 +56,7 @@ eventRouter
 
 eventRouter
   .route('/:event_id/gifts')
+  .all(requireAuth)
   .get((req, res, next) => {
     EventsService.getGiftsByEventId(
       req.app.get('db'),
