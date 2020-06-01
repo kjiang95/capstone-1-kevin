@@ -6,6 +6,36 @@ const xss = require('xss');
 const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/
 
 const UsersService = {
+  comparePasswords(password, hash) {
+    return bcrypt.compare(password, hash);
+  },
+
+  creatJwt(subject, payload) {
+    return jwt.sign(payload, config.JWT_SECRET, {
+      subject,
+      algorithm: 'HS256'
+    });
+  },
+
+  verifyJwt(token) {
+    return jwt.verify(token, config.JWT_SECRET, {
+      algorithms: ['HS256']
+    });
+  },
+
+  getUserByUserName(db, username) {
+    return db('users_table')
+      .where({ username })
+      .first();
+  },
+
+  parseBasicToken(token) {
+    return Buffer
+      .from(token, 'base64')
+      .toString()
+      .split(':');
+  },
+
   hasUserWithUserName(db, username) {
     return db('users_table')
       .where({ username })
