@@ -15,7 +15,7 @@ usersRouter
     for (const [key, value] of Object.entries(loginUser)) {
       if (value === null) {
         return res.status(400).json({
-          error: `Mission '${key}' in request body` 
+          error: `Missing '${key}' in request body` 
         });
       }
     }
@@ -53,22 +53,22 @@ usersRouter
   .route('/register')
   .post(jsonBodyParser, (req, res, next) => {
     const { username, password } = req.body;
+    const registerUser = {username, password};
 
-    for (const field of ['username', 'password']) {
-      if (!req.body[field]) {
+    for (const [key, value] of Object.entries(registerUser)) {
+      if (value === null) {
         return res.status(400).json({
-          error: `Missing '${field} in request body`
+          error: `Missing '${key}' in request body` 
         });
       }
-
-      const passwordError = UsersService.validatePassword(password);
-      if (passwordError) {
-        return res.status(400).json({error: passwordError});
-      }
+    }
+    const passwordError = UsersService.validatePassword(registerUser.password);
+    if (passwordError) {
+      return res.status(400).json({error: passwordError});
     }
     UsersService.hasUserWithUserName(
       req.app.get('db'),
-      username
+      registerUser.username
     )
       .then(hasUserWithUserName => {
         if (hasUserWithUserName) {
