@@ -9,7 +9,9 @@ describe('Users Endpoints', function() {
 
   const {
     testUsers,
-    testGiftees
+    testGiftees,
+    testEvents,
+    testGifts
   } = helpers.makeFixtures();
 
   const testUser = testUsers[0];
@@ -228,6 +230,44 @@ describe('Users Endpoints', function() {
                 expect(compareMatch).to.be.true;
               })
           );
+      });
+    });
+  });
+
+  describe('GET /users/giftees', () => {
+    context('Given no giftees', () => {
+      beforeEach('insert giftees', () =>
+        helpers.seedTables(
+          db,
+          testUsers
+        )
+      );
+
+      it('responds with 200 and an empty list', () => {
+        return supertest(app)
+          .get('/users/giftees')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0], testUsers[0].username))
+          .expect(200, []);
+      });
+    });
+
+    context('Given there are giftees in the database', () => {
+      beforeEach('insert giftees', () =>
+        helpers.seedTables(
+          db,
+          testUsers,
+          testGiftees,
+          testEvents,
+          testGifts
+        )
+      );
+
+      it('responds with 200 and all of the giftees', () => {
+        const expectedGiftees = helpers.makeExpectedGiftees(testUsers[0], testGiftees);
+        return supertest(app)
+          .get('/users/giftees')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0], testUsers[0].username))
+          .expect(200, expectedGiftees);
       });
     });
   });

@@ -108,6 +108,9 @@ usersRouter
       user_id
     )
       .then(giftees => {
+        if (!giftees) {
+          return [];
+        }
         res.json(UsersService.serializeGiftee(giftees));
       })
       .catch(next);

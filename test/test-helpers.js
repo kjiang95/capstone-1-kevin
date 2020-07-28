@@ -160,31 +160,20 @@ function makeGiftsArray(events) {
   ];
 }
 
-// function makeExpectedGiftee(users, article, comments=[]) {
-//   const user = users
-//     .find(user => user.id === article.author_id)
+function makeExpectedGiftees(user, giftees) {
+  const filteredGiftees = giftees.filter(giftee => giftee.user_id === user.id)
+  return filteredGiftees
+}
 
-//   const number_of_comments = comments
-//     .filter(comment => comment.article_id === article.id)
-//     .length
+function makeExpectedEvents(giftee, events) {
+  const filteredEvents = events.filter(event => event.giftee_id === giftee.id)
+  return filteredEvents
+}
 
-//   return {
-//     id: article.id,
-//     style: article.style,
-//     title: article.title,
-//     content: article.content,
-//     date_created: article.date_created.toISOString(),
-//     number_of_comments,
-//     author: {
-//       id: author.id,
-//       user_name: author.user_name,
-//       full_name: author.full_name,
-//       nickname: author.nickname,
-//       date_created: author.date_created.toISOString(),
-//       date_modified: author.date_modified || null,
-//     },
-//   }
-// }
+function makeExpectedGifts(event, gifts) {
+  const filteredGifts = gifts.filter(gift => gift.event_id === event.id)
+  return filteredGifts
+}
 
 // function makeExpectedArticleComments(users, articleId, comments) {
 //   const expectedComments = comments
@@ -276,16 +265,18 @@ function seedUsers(db, users) {
     )
 }
 
-function seedTables(db, users, giftees, events=[], gifts=[]) {
+function seedTables(db, users, giftees=[], events=[], gifts=[]) {
   // use a transaction to group the queries and auto rollback on any failure
   return db.transaction(async trx => {
     await seedUsers(trx, users)
-    await trx.into('giftees_table').insert(giftees)
-    // update the auto sequence to match the forced id values
-    await trx.raw(
-      `SELECT setval('giftees_table_id_seq', ?)`,
-      [giftees[giftees.length - 1].id],
-    )
+    if (giftees.length) {
+      await trx.into('giftees_table').insert(giftees)
+      // update the auto sequence to match the forced id values
+      await trx.raw(
+        `SELECT setval('giftees_table_id_seq', ?)`,
+        [giftees[giftees.length - 1].id],
+      )
+    }
     // only insert events if there are some, also update the sequence counter
     if (events.length) {
       await trx.into('events_table').insert(events)
@@ -315,7 +306,6 @@ function seedTables(db, users, giftees, events=[], gifts=[]) {
 // }
 
 function makeAuthHeader(user, username, secret = process.env.JWT_SECRET) {
-  console.log(username)
   const token = jwt.sign({ user_id: user.id }, secret, {
     subject: username,
     algorithm: 'HS256',
@@ -331,6 +321,9 @@ module.exports = {
   makeFixtures,
   cleanTables,
   makeAuthHeader,
+  makeExpectedGiftees,
+  makeExpectedEvents,
+  makeExpectedGifts,
   seedUsers,
   seedTables
 }

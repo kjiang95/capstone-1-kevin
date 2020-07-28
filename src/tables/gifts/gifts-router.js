@@ -54,11 +54,15 @@ giftsRouter
   })
   .patch(jsonBodyParser, (req, res, next) => {
     const { notes } = req.body;
-    const updatedGift = notes;
+    const updatedGift = { notes };
     GiftsService.updateGiftById(
       req.app.get('db'),
       req.params.gift_id,
       updatedGift
-    );
+    )
+      .then(() => {
+        res.status(204).end();
+      })
+      .catch(next);
   });
 module.exports = giftsRouter;
