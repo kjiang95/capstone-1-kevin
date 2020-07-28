@@ -1,26 +1,54 @@
-# Express Boilerplate!
+# Application
+Penny Thoughts
 
-This is a boilerplate project used for starting new projects!
+## Built By
+Kevin Jiang
 
-## Set up
+## Links
+live site: https://gift-app.now.sh/<br />
+server: https://shielded-dusk-65015.herokuapp.com<br />
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+## Using The API
+Currently the API supports GET, POST, DELETE, and PATCH endpoints.<br />
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
+- Unprotected Endpoints<br />
+  + Sign Up: POST (https://url/users/register)<br />
 
-## Scripts
+- Protected Endpoints<br />
+  + Login: POST (https://url/users/login)<br />
+  + Get Giftees: GET (https://url/users/giftees)<br />
+  + Create a new Giftee: POST (https://url/giftees)<br />
+  + Get one Giftee: GET (https://url/users/giftees/:giftee_id)<br />
+  + Delete a Giftee: DELETE (https://url/giftees/:giftee_id)<br />
+  + Get all Events associated with Giftee: GET (https://url/users/giftees/:giftee_id/events)<br />
+  + Create a new Event: POST (https://url/events)<br />
+  + Get one Event: GET (https://url/users/events/:event_id)<br />
+  + Delete an Event: DELETE (https://url/event/:event_id)<br />
+  + Get all Gifts associated with an Event: GET (https://url/users/events/:event_id/gifts)<br />
+  + Create a new Gift: POST (https://url/gifts)<br />
+  + Get one Gift: GET (https://url/users/gifts/:gift_id)<br />
+  + Delete a Gift: DELETE (https://url/gifts/:gift_id)<br />
+  + Update a Gift's notes: PATCH (https://url/gifts/:gift_id)<br />
 
-Start the application `npm start`
+## Screen Shots
+![Landing](images/LandingPage.png)<br />
+![LogIn](images/LogInPage.png)<br />
+![Registration](images/RegistrationPage.png)<br />
+![New Giftee Page](images/NewGifteePage.png)<br />
+![New Event Page](images/NewEventPage.png)<br />
+![Gifts Page](images/GiftsPage.png)<br />
 
-Start nodemon for the application `npm run dev`
+### Summary
+This app allows you to track significant dates for the people you care about.
+Create Giftees, gift-worthy events for those Giftees, and track gift ideas to make those events memorable.
 
-Run the tests `npm test`
-
-## Deploying
-
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+## Technologies
+- Font End
+  * React
+- Back End
+  * Node.js
+  * Express
+  * Postgresql
+- Testing
+  * Mocha, Chai
+  * Jest
