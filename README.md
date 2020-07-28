@@ -32,7 +32,7 @@ Currently the API supports GET, POST, DELETE, and PATCH endpoints.<br />
 
 ## Screen Shots
 ![Landing](images/LandingPage.png)<br />
-![LogIn](images/LogInPage.png)<br />
+![LogIn](images/LoginPage.png)<br />
 ![Registration](images/RegistrationPage.png)<br />
 ![New Giftee Page](images/NewGifteePage.png)<br />
 ![New Event Page](images/NewEventPage.png)<br />
