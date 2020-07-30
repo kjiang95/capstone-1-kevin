@@ -1,5 +1,5 @@
 # Application
-Penny Thoughts
+Gift App
 
 ## Built By
 Kevin Jiang
